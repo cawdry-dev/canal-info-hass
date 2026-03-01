@@ -179,7 +179,7 @@ class CRTStoppageEvent(GeolocationEvent):
             "waterway": waterways or None,
             "start_date": props.get("start"),
             "end_date": props.get("end"),
-            "description": props.get("description"),
+            "description": props.get("description", ""),
             "url": url,
         }
 

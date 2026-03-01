@@ -10,7 +10,7 @@ LOOKAHEAD_DAYS = 60
 API_BASE_URL = (
     "https://canalrivertrust.org.uk/api/stoppage/notices"
     "?consult=false&start={start}&end={end}"
-    "&fields=title,description,region,waterways,path,typeId,reasonId,"
+    "&fields=title,region,waterways,path,typeId,reasonId,"
     "programmeId,start,end,state,image&geometry=point"
 )
 

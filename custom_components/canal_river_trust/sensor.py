@@ -80,7 +80,7 @@ def _stoppage_dict(feature: dict[str, Any]) -> dict[str, Any]:
         "start": props.get("start"),
         "end": props.get("end"),
         "state": props.get("state"),
-        "description": props.get("description"),
+        "description": props.get("description", ""),
         "url": f"{CRT_BASE_URL}{path}" if path else None,
     }
 
@@ -205,7 +205,7 @@ class CRTNextClosureSensor(
         props = closure.get("properties", {})
         return {
             "title": props.get("title"),
-            "description": props.get("description"),
+            "description": props.get("description", ""),
             "start": props.get("start"),
             "end": props.get("end"),
         }

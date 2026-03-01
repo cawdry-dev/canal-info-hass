@@ -126,7 +126,7 @@ class CRTDataCoordinator(DataUpdateCoordinator[list[dict[str, Any]]]):
                 "waterway_code": waterway_code,
                 "start": properties.get("start", ""),
                 "end": properties.get("end", ""),
-                "description": properties.get("description", ""),
+                "description": "",
                 "url": f"{CRT_BASE_URL}{path}" if path else "",
             }
 
