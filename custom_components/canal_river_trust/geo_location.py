@@ -10,14 +10,12 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import UnitOfLength
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from homeassistant.util.location import distance as haversine_distance
 
-from .const import DOMAIN, REASON_MAP, TYPE_MAP, WATERWAY_MAP
+from .const import CRT_BASE_URL, DOMAIN, REASON_MAP, TYPE_MAP, WATERWAY_MAP
+from .coordinator import CRTDataCoordinator
 
 _LOGGER = logging.getLogger(__name__)
-
-CRT_BASE_URL = "https://canalrivertrust.org.uk"
 
 
 async def async_setup_entry(
@@ -26,9 +24,7 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up Canal & River Trust geo-location entities from a config entry."""
-    coordinator: DataUpdateCoordinator = hass.data[DOMAIN][entry.entry_id][
-        "coordinator"
-    ]
+    coordinator: CRTDataCoordinator = hass.data[DOMAIN][entry.entry_id]
 
     current_entities: dict[str, CRTStoppageEvent] = {}
 
@@ -124,7 +120,7 @@ class CRTStoppageEvent(GeolocationEvent):
     def __init__(
         self,
         hass: HomeAssistant,
-        coordinator: DataUpdateCoordinator,
+        coordinator: CRTDataCoordinator,
         feature: dict[str, Any],
         coords: tuple[float, float],
     ) -> None:
