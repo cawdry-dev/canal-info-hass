@@ -14,6 +14,9 @@ from homeassistant.config_entries import (
 from homeassistant.core import callback
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.helpers.selector import (
+    NumberSelector,
+    NumberSelectorConfig,
+    NumberSelectorMode,
     SelectSelector,
     SelectSelectorConfig,
     SelectSelectorMode,
@@ -79,9 +82,14 @@ class CanalRiverTrustConfigFlow(ConfigFlow, domain=DOMAIN):
                 vol.Optional(
                     CONF_SCAN_INTERVAL,
                     default=DEFAULT_SCAN_INTERVAL_MINUTES,
-                ): vol.All(
-                    vol.Coerce(int),
-                    vol.Range(min=5),
+                ): NumberSelector(
+                    NumberSelectorConfig(
+                        min=5,
+                        max=1440,
+                        step=1,
+                        unit_of_measurement="minutes",
+                        mode=NumberSelectorMode.BOX,
+                    )
                 ),
             }
         )
@@ -140,9 +148,14 @@ class CanalRiverTrustOptionsFlow(OptionsFlow):
                 vol.Optional(
                     CONF_SCAN_INTERVAL,
                     default=current_scan_interval,
-                ): vol.All(
-                    vol.Coerce(int),
-                    vol.Range(min=5),
+                ): NumberSelector(
+                    NumberSelectorConfig(
+                        min=5,
+                        max=1440,
+                        step=1,
+                        unit_of_measurement="minutes",
+                        mode=NumberSelectorMode.BOX,
+                    )
                 ),
             }
         )
