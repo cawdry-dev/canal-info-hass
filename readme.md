@@ -139,6 +139,70 @@ card:
     stoppages on your monitored waterways. Check the details below.
 ```
 
+## Automations & Notifications
+
+The integration fires custom events when stoppages appear or are resolved, making it easy to build notification automations.
+
+### New Stoppage Alert
+
+Receive a notification whenever a new stoppage is reported on your monitored waterways:
+
+```yaml
+automation:
+  - alias: "CRT New Stoppage Alert"
+    trigger:
+      - platform: event
+        event_type: crt_new_stoppage
+    action:
+      - service: notify.mobile_app_your_phone
+        data:
+          title: "New Canal Stoppage"
+          message: "{{ trigger.event.data.title }} on {{ trigger.event.data.waterway }} ({{ trigger.event.data.type }}). {{ trigger.event.data.start }} to {{ trigger.event.data.end }}"
+          data:
+            url: "{{ trigger.event.data.url }}"
+```
+
+### Upcoming Closure Warning (Within 7 Days)
+
+Get a warning when a closure is less than 7 days away:
+
+```yaml
+automation:
+  - alias: "CRT Upcoming Closure Warning"
+    trigger:
+      - platform: state
+        entity_id: sensor.crt_gu_next_closure
+    condition:
+      - condition: template
+        value_template: >
+          {{ states('sensor.crt_gu_next_closure') not in ['None', 'unknown', 'unavailable']
+             and (as_datetime(states('sensor.crt_gu_next_closure')) - now()).days <= 7 }}
+    action:
+      - service: notify.mobile_app_your_phone
+        data:
+          title: "Canal Closure Warning"
+          message: "Closure on Grand Union Canal in {{ (as_datetime(states('sensor.crt_gu_next_closure')) - now()).days }} days: {{ state_attr('sensor.crt_gu_next_closure', 'title') }}"
+```
+
+### Stoppage Resolved
+
+Be notified when a previously reported stoppage has been cleared:
+
+```yaml
+automation:
+  - alias: "CRT Stoppage Resolved"
+    trigger:
+      - platform: event
+        event_type: crt_stoppage_resolved
+    action:
+      - service: notify.mobile_app_your_phone
+        data:
+          title: "Canal Stoppage Cleared"
+          message: "{{ trigger.event.data.title }} on {{ trigger.event.data.waterway }} has been resolved."
+```
+
+> **Note:** Replace `notify.mobile_app_your_phone` with your actual notification service and `sensor.crt_gu_*` with your actual entity IDs. Entity IDs are based on the waterway names you selected during configuration.
+
 ## Troubleshooting
 
 ### No sensors appearing after setup
@@ -164,7 +228,7 @@ card:
 
 ## Brand Assets
 
-A brand icon can be added in a future release. HACS does not strictly require brand assets for custom repositories.
+The Canal & River Trust logo is included as the integration icon in `custom_components/canal_river_trust/brand/`. HACS will display this icon in the integration card and dashboard.
 
 ## Licence
 

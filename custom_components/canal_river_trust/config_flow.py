@@ -9,10 +9,15 @@ import voluptuous as vol
 from homeassistant.config_entries import (
     ConfigEntry,
     ConfigFlow,
-    ConfigFlowResult,
     OptionsFlow,
 )
 from homeassistant.core import callback
+from homeassistant.data_entry_flow import FlowResult
+from homeassistant.helpers.selector import (
+    SelectSelector,
+    SelectSelectorConfig,
+    SelectSelectorMode,
+)
 
 from .const import (
     CONF_SCAN_INTERVAL,
@@ -26,6 +31,20 @@ from .const import (
 DEFAULT_SCAN_INTERVAL_MINUTES = int(DEFAULT_SCAN_INTERVAL.total_seconds()) // 60
 
 
+def _waterway_selector() -> SelectSelector:
+    """Build a multi-select dropdown selector for waterways."""
+    return SelectSelector(
+        SelectSelectorConfig(
+            options=[
+                {"value": code, "label": name}
+                for code, name in sorted(WATERWAY_MAP.items(), key=lambda x: x[1])
+            ],
+            multiple=True,
+            mode=SelectSelectorMode.DROPDOWN,
+        )
+    )
+
+
 class CanalRiverTrustConfigFlow(ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Canal & River Trust Stoppages."""
 
@@ -34,7 +53,7 @@ class CanalRiverTrustConfigFlow(ConfigFlow, domain=DOMAIN):
     async def async_step_user(
         self,
         user_input: dict[str, Any] | None = None,
-    ) -> ConfigFlowResult:
+    ) -> FlowResult:
         """Handle the initial step."""
         errors: dict[str, str] = {}
 
@@ -54,16 +73,9 @@ class CanalRiverTrustConfigFlow(ConfigFlow, domain=DOMAIN):
                     },
                 )
 
-        waterway_options = {
-            code: name for code, name in WATERWAY_MAP.items()
-        }
-
         data_schema = vol.Schema(
             {
-                vol.Required(CONF_WATERWAYS): vol.All(
-                    vol.Coerce(list),
-                    [vol.In(waterway_options)],
-                ),
+                vol.Required(CONF_WATERWAYS): _waterway_selector(),
                 vol.Optional(
                     CONF_SCAN_INTERVAL,
                     default=DEFAULT_SCAN_INTERVAL_MINUTES,
@@ -86,20 +98,16 @@ class CanalRiverTrustConfigFlow(ConfigFlow, domain=DOMAIN):
         config_entry: ConfigEntry,
     ) -> CanalRiverTrustOptionsFlow:
         """Get the options flow for this handler."""
-        return CanalRiverTrustOptionsFlow(config_entry)
+        return CanalRiverTrustOptionsFlow()
 
 
 class CanalRiverTrustOptionsFlow(OptionsFlow):
     """Handle options flow for Canal & River Trust Stoppages."""
 
-    def __init__(self, config_entry: ConfigEntry) -> None:
-        """Initialise options flow."""
-        self.config_entry = config_entry
-
     async def async_step_init(
         self,
         user_input: dict[str, Any] | None = None,
-    ) -> ConfigFlowResult:
+    ) -> FlowResult:
         """Manage the options."""
         errors: dict[str, str] = {}
 
@@ -123,19 +131,12 @@ class CanalRiverTrustOptionsFlow(OptionsFlow):
             CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL_MINUTES
         )
 
-        waterway_options = {
-            code: name for code, name in WATERWAY_MAP.items()
-        }
-
         data_schema = vol.Schema(
             {
                 vol.Required(
                     CONF_WATERWAYS,
                     default=current_waterways,
-                ): vol.All(
-                    vol.Coerce(list),
-                    [vol.In(waterway_options)],
-                ),
+                ): _waterway_selector(),
                 vol.Optional(
                     CONF_SCAN_INTERVAL,
                     default=current_scan_interval,
