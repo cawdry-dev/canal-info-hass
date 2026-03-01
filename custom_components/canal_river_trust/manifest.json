@@ -1,0 +1,11 @@
+{
+  "domain": "canal_river_trust",
+  "name": "Canal & River Trust Stoppages",
+  "codeowners": [],
+  "config_flow": true,
+  "documentation": "",
+  "iot_class": "cloud_polling",
+  "requirements": [],
+  "version": "1.0.0"
+}
+

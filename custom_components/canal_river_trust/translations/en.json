@@ -1,0 +1,41 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Canal & River Trust Stoppages",
+        "description": "Configure the Canal & River Trust stoppages integration.",
+        "data": {
+          "waterways": "Waterways",
+          "scan_interval": "Update interval (minutes)"
+        },
+        "data_description": {
+          "waterways": "Select the waterways you wish to monitor.",
+          "scan_interval": "Update interval in minutes. Minimum 5 minutes."
+        }
+      }
+    },
+    "error": {
+      "no_waterways_selected": "Please select at least one waterway."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Canal & River Trust Stoppages Options",
+        "description": "Update your Canal & River Trust stoppages settings.",
+        "data": {
+          "waterways": "Waterways",
+          "scan_interval": "Update interval (minutes)"
+        },
+        "data_description": {
+          "waterways": "Select the waterways you wish to monitor.",
+          "scan_interval": "Update interval in minutes. Minimum 5 minutes."
+        }
+      }
+    },
+    "error": {
+      "no_waterways_selected": "Please select at least one waterway."
+    }
+  }
+}
+
