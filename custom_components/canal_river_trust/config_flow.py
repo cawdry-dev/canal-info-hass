@@ -14,13 +14,16 @@ from homeassistant.config_entries import (
 )
 from homeassistant.core import callback
 
-from .const import DEFAULT_SCAN_INTERVAL, DOMAIN, WATERWAY_MAP
-
-CONF_WATERWAYS = "waterways"
-CONF_SCAN_INTERVAL = "scan_interval"
+from .const import (
+    CONF_SCAN_INTERVAL,
+    CONF_WATERWAYS,
+    DEFAULT_SCAN_INTERVAL,
+    DOMAIN,
+    WATERWAY_MAP,
+)
 
 # Default scan interval in minutes for the UI
-DEFAULT_SCAN_INTERVAL_MINUTES = DEFAULT_SCAN_INTERVAL // 60
+DEFAULT_SCAN_INTERVAL_MINUTES = int(DEFAULT_SCAN_INTERVAL.total_seconds()) // 60
 
 
 class CanalRiverTrustConfigFlow(ConfigFlow, domain=DOMAIN):
