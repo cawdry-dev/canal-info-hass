@@ -48,7 +48,7 @@ For each waterway you select, a sensor is created (e.g. `sensor.crt_grand_union_
 | `reason`      | Reason for the stoppage                  |
 | `start`       | Start date of the stoppage               |
 | `end`         | End date of the stoppage                 |
-| `description` | Detailed description (may be empty)      |
+| `description` | Always empty (field removed from API)    |
 | `url`         | Link to the stoppage on the CRT website  |
 | `latitude`    | Latitude of the stoppage location        |
 | `longitude`   | Longitude of the stoppage location       |
